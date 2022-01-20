@@ -1,3 +1,6 @@
+import 'ABIConstants.js'    // Constants for ABI
+import 'TokenAddresses.js' // Constants for Token Addresses
+
 /* Import Ether Contract Lib */
 const ethers = require( 'ethers' );
 
@@ -26,9 +29,9 @@ const privateKey = '';
 /* Smart Contract Address for Mainnet ERC20 Tokens */
 const Tokens = {
     WETH: WETH [ChainId.MAINNET],
-    DAI: new Token( ChainId.MAINNET, '0x6B175474E89094C44Da98b954EedeAC495271d0F', 18 , 'DAI'),
-    BAT: new Token( ChainId.MAINNET, '0x2E642b8D59B45a1D8c5aEf716A84FF44ea665914', 18, 'BAT') ,
-    MKR : new Token ( ChainId.MAINNET, '0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2', 18, 'MKR')
+    DAI: new Token( ChainId.MAINNET, DAIAddress, 18 , 'DAI'),
+    BAT: new Token( ChainId.MAINNET, BATAddress, 18, 'BAT') ,
+    MKR : new Token ( ChainId.MAINNET, MKRAddress, 18, 'MKR')
 };
 
 
@@ -80,3 +83,24 @@ function constructContract(smAddress, smABI, privateKey) {
             signer.connect(provider)
         )
 }
+
+
+/* Construct Smart Contracts */
+// Tokens
+const wethContract = constructContract(Tokens.WETH.address, IERC20_ABI, privateKey);
+const daiContract = constructContract(Tokens.DAI.address, IERC20_ABI, privateKey);
+const mkrContract = constructContract(Tokens.MKR.address, IERC20_ABI, privateKey);
+const batContract = constructContract(Tokens.BAT.address, IERC20_ABI, privateKey);
+
+// DEX
+const uniswap = constructContract(
+    uniswapAddress,
+    uniswapABI,
+    privateKey,               
+);
+
+const sushiswap  = constructContract(
+    sushiswapAddress,
+    sushiswapABI,
+    privateKey,
+);
