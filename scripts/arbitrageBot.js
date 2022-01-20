@@ -13,3 +13,9 @@ const {
     Trade,
     TokenAmount,
 } = require( '@uniswap/sdk' );
+
+/* Connection Params to HardHat Local Fork */
+const providerURL = 'http://localhost:8545'; 
+const provider = new ethers.providers.JsonRpcProvider( providerURL );
+const localTestAccountAddress = '';
+const privateKey = '';
