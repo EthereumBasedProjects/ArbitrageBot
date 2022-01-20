@@ -53,6 +53,12 @@ async function getTokenBalance(address, tokenContract) {
     return ethers.utils.formatUnits(balance, decimals);
 }
 
+async function getTokenBalanceInBN(address, tokenContract) {
+    const balance = await tokenContract.balanceOf(address);
+    
+    return BigNumber.from(balance);
+}
+
 /* Print Account Balance in Human Readable Form*/
 async function printAccountBalance(address, privateKey) {
     const balance = await provider.getBalance(address);
@@ -62,4 +68,15 @@ async function printAccountBalance(address, privateKey) {
     const batBalance = await getTokenBalance(address, batContract);
 
     console.log(`Account balance: ${ethers.utils.formatUnits(balance,18)} ethers, ${wethBalance} weth, ${daiBalance} DAI, ${mkrBalance} MKR, ${batBalance} BAT`);
+}
+
+/* Function to connect smart contract to Account Wallet */
+function constructContract(smAddress, smABI, privateKey) {
+    const signer = new ethers.Wallet(privateKey) ;
+
+    return new ethers.Contract(
+            smAddress,
+            smABI,
+            signer.connect(provider)
+        )
 }
