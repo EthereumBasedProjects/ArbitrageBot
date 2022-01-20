@@ -6,5 +6,5 @@
 </p>
 
 ## Arbirtrage Bot that looks for and executes arbitrage on Sushiswap and Uniswap. 
-## Built with Hardhat and Infura
-- Currently Bot is using only DAI & MKR Tokens
+- **Built with Hardhat and Infura**
+- **Currently Bot is using only DAI & MKR Tokens**
