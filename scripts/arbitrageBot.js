@@ -104,3 +104,39 @@ const sushiswap  = constructContract(
     sushiswapABI,
     privateKey,
 );
+
+/* Check and Approve Token Allowance */
+async function checkAndApproveTokenForTrade(srcTokenContract, userAddress, srcQty, factoryAddress) {
+    console.log(`Evaluating : approve ${srcQty} tokens for trade`);
+  
+    if (srcTokenContract.address == ETH_ADDRESS) {
+      return;
+    }
+  
+    let existingAllowance = await srcTokenContract.allowance(userAddress, factoryAddress);
+  
+    console.log(`Existing allowance ${existingAllowance}`);
+  
+    if (existingAllowance.eq(ZERO_BN)) {
+      console.log(`Approving contract to max allowance ${srcQty}`);
+      
+      await srcTokenContract.approve(factoryAddress, srcQty);
+
+    } else if (existingAllowance.lt(srcQty)) {
+  
+      // if existing allowance is insufficient, reset to zero, then set to MAX_UINT256
+  
+      //setting approval to 0 and then to a max is suggestible since  if the address already has an approval, 
+  
+      //setting again to a max would bump into error
+  
+      console.log(`Approving contract to zero, then max allowance ${srcQty}`);
+  
+      await srcTokenContract.approve(factoryAddress, ZERO_BN);
+      await srcTokenContract.approve(factoryAddress, srcQty);
+  
+    } 
+  
+    return;
+  }
+  
