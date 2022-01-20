@@ -212,3 +212,65 @@ async function printTxDetails(tx) {
     console.log(`Transaction was mined in block ${receipt.blockNumber}`);
 
 }
+
+/* Function to see if there is an opportunity for arbitrage between sushiswap and uniswap */
+async function searchProfitableArbitrage(args) {
+    const {inputToken, outputToken, inputTokenContract, outputTokenContract} = args
+    const inputTokenSymbol = inputToken.symbol
+    const outputTokenSymbol = outputToken.symbol
+    const tradeAmount = BigNumber.from("1000000000000000000");
+
+    const uniRates1 = await uniswap.getAmountsOut(tradeAmount, [inputToken.address, outputToken.address]);
+
+    console.log(`Uniswap Exchange Rate: ${ethers.utils.formatUnits(uniRates1[0], 18)} ${inputTokenSymbol} = ${ethers.utils.formatUnits(uniRates1[1], 18)} ${outputTokenSymbol}`);
+
+    const uniRates2 = await uniswap.getAmountsOut(tradeAmount, [outputToken.address, inputToken.address]);
+
+    console.log(`Uniswap Exchange Rate: ${ethers.utils.formatUnits(uniRates2[0], 18)} ${outputTokenSymbol} = ${ethers.utils.formatUnits(uniRates2[1], 18)} ${inputTokenSymbol}`);
+
+    const sushiRates1 = await sushiswap.getAmountsOut(tradeAmount, [inputToken.address, outputToken.address]);
+
+    console.log(`Sushiswap Exchange Rate: ${ethers.utils.formatUnits(sushiRates1[0], 18)} ${inputTokenSymbol} = ${ethers.utils.formatUnits(sushiRates1[1], 18)} ${outputTokenSymbol}`);
+
+    const sushirates2 = await sushiswap.getAmountsOut(tradeAmount, [outputToken.address, inputToken.address]);
+
+    console.log(`Sushiswap Exchange Rate: ${ethers.utils.formatUnits(sushiRates2[0], 18)} ${outputTokenSymbol} = ${ethers.utils.formatUnits(sushiRates2[1], 18)} ${inputTokenSymbol}`);
+
+    const sushiswapRates = {
+        buy: sushiRates1[1],
+        sell: sushiRates2[1]
+    };
+
+    const uniswapRates = {
+        buy: uniRates1[1],
+        sell: uniRates2[1]
+    };
+
+    // profit1 = profit if we buy input token on uniswap and sell it on sushiswap
+
+    const profit1 = tradeAmount * (uniswapRates.sell - sushiswapRates.buy - gasPrice * 0.003);
+
+    // profit2 = profit if we buy input token on sushiswap and sell it on uniswap
+
+    const profit2 = tradeAmount * (sushiswapRates.sell - uniswapRates.buy - gasPrice * 0.003);
+      
+    console.log(`Profit from UniswapSushiswap : ${profit1}`)
+    console.log(`Profit from SushiswapUniswap : ${profit2}`)
+
+    if(profit1 > 0 && profit1 > profit2) {
+        //Execute arbitrage on Uniswap -> Sushiswap
+        console.log(`Arbitrage Found: Make ${profit1} : Sell ${inputTokenSymbol} on Uniswap at ${uniswapRates.sell} and Buy ${outputTokenSymbol} on Sushiswap at ${sushiswapRates.buy}`);
+
+        await swap(inputToken, outputToken, testAccountAddress, inputTokenContract, uniswap);
+        await swap(outputToken, inputToken, testAccountAddress, outputTokenContract, sushiswap);
+    
+    } else if(profit2 > 0) {
+        //Execute arb Sushiswap -> Uniswap
+        console.log(`Arbitrage Found: Make ${profit2} : Sell ${inputTokenSymbol} on Sushiswap at ${sushiswapRates.sell} and Buy ${outputTokenSymbol} on Uniswap at ${uniswapRates.buy}`);
+    
+        await swap(inputToken, outputToken, testAccountAddress, inputTokenContract, sushiswap);
+        await swap(outputToken, inputToken, testAccountAddress, outputTokenContract, uniswap);
+
+    }
+
+}
