@@ -5,4 +5,6 @@
     <img alt="Sushiswap" title="Sushiswap" src="assets/sushiswap.jpeg" width="250" height="250">
 </p>
 
-## Arbirtrage Bot that looks for and executes arbitrage for DAI and MKR on sushiswap and uniswap. Built with Hardhat and Infura
+## Arbirtrage Bot that looks for and executes arbitrage on Sushiswap and Uniswap. 
+## Built with Hardhat and Infura
+- Currently Bot is using only DAI & MKR Tokens
