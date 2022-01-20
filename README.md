@@ -4,6 +4,4 @@
     <img alt="Versus" title="Versus" src="assets/versus.jpeg" width="150" height="250">
     <img alt="Sushiswap" title="Sushiswap" src="assets/sushiswap.jpeg" width="250" height="250">
 </p>
-<p align="center">
-  Arbirtrage Bot that looks for and executes arbitrage for DAI and MKR on sushiswap and uniswap. Built with Hardhat and Infura
-</p>
+## Arbirtrage Bot that looks for and executes arbitrage for DAI and MKR on sushiswap and uniswap. Built with Hardhat and Infura
