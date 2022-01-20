@@ -1,4 +1,4 @@
-import 'ABIConstants.js'    // Constants for ABI
+import 'ABIConstants.js'   // Constants for ABI
 import 'TokenAddresses.js' // Constants for Token Addresses
 
 /* Import Ether Contract Lib */
@@ -23,8 +23,12 @@ const {
 /* Connection Params to HardHat Local Fork */
 const providerURL = 'http://localhost:8545'; 
 const provider = new ethers.providers.JsonRpcProvider( providerURL );
-const localTestAccountAddress = '';
-const privateKey = '';
+const testAccountAddress = '0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266';
+const privateKey = '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80';
+
+const ETH_ADDRESS = "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee";
+const MAX_UINT256 = ethers.constants.MaxUint256;
+const ZERO_BN = ethers.constants.Zero;
 
 /* Smart Contract Address for Mainnet ERC20 Tokens */
 const Tokens = {
