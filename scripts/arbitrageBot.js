@@ -139,4 +139,28 @@ async function checkAndApproveTokenForTrade(srcTokenContract, userAddress, srcQt
   
     return;
   }
+ 
+/* Constructs Trade Pairs for Given Tokens at Slippage of 0.5% */  
+async function constructTradeParameters( tokenA, tokenB, tokenAmount ) {
+
+    const slippageTolerance = new Percent( '50', '100' );
+    const pair = await Fetcher.fetchPairData( tokenA, tokenB );
+    const route = new Route([pair], tokenA );
+    const trade = new Trade(
+        route,
+        new TokenAmount( tokenA, tokenAmount ),
+        TradeType.EXACT_INPUT,
+    );
+    const minimumAmountOut = trade.minimumAmountOut( slippageTolerance );
+
+    console.log(`minimumAmountOut is ${minimumAmountOut.raw}`);
+
+    return {
+        amountOutMin : minimumAmountOut,
+        amountOutMinRaw : minimumAmountOut.raw,
+        value: toHex( trade.inputAmount.raw )
+    };
+
+}
+
   
